@@ -1,0 +1,301 @@
+﻿@model IEnumerable<PreUni.College.DAL.ViewModel.ProgressCommentVM>
+
+<h1>@ViewBag.ClassName</h1>
+
+<div class="container">
+    @foreach (PreUni.College.DAL.ViewModel.ProgressCommentVM vm in Model)
+    {
+        @Html.Partial("_StudentComment", vm)
+    }
+</div>
+
+<script>
+
+    $(".OnlineQuizAndHomeworkMark_Area").on("click", function () {
+
+        var _Year = '@Model.FirstOrDefault().Year';
+        var _Term = '@Model.FirstOrDefault().Term';
+        var ClassID = '@Model.FirstOrDefault().ClassID';
+        var _Url = '@Url.Content("~/ProgressComment/GetHomeworkMark")'
+        var _StudentID = $(this).parent().attr('StudentID');
+
+        var HomeworkViewArea = $(this).find('.col:eq(0)');
+        var QuizViewArea = $(this).find('.col:eq(1)');
+
+        $.ajax({
+            url: _Url,
+            type: 'POST',
+            data: { ClassID: ClassID, StudentID: _StudentID, Year: _Year, Term: _Term },
+            success: function (json) {
+                //HomeworkViewArea.append(json.HomeworkView);
+                HomeworkViewArea.html(json.HomeworkView);
+                //QuizViewArea.append(json.QuizView);
+                QuizViewArea.html(json.QuizView);
+
+                //DetailDiv.toggle('slow');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                var responseTitle = $(jqXHR.responseText).filter('title').get(0);
+                alert($(responseTitle).text() + "\n" + formatErrorMessage(jqXHR, errorThrown));
+            }
+        });
+        return false;
+    });
+
+    //Comment limit
+    //$(".ProgressComment1").keyup(function () {
+    //    var WordLimit = 2000 - $(this).val().length;
+    //    $(this).parent().next().next().html(WordLimit + " characters left");
+    //})
+
+    //$(".ProgressComment2").keyup(function () {
+    //    var WordLimit = 2000 - $(this).val().length;
+
+    //    $(this).parent().next().next().html(WordLimit + " characters left");
+    //})
+
+    //$(".ProgressComment3").keyup(function () {
+    //    var WordLimit = 2000 - $(this).val().length;
+
+    //    $(this).parent().next().next().html(WordLimit + " characters left");
+    //})
+
+    //$(".ProgressComment4").keyup(function () {
+    //    var WordLimit = 2000 - $(this).val().length;
+
+    //    $(this).parent().next().next().html(WordLimit + " characters left");
+    //})
+
+    // ##########################################################################################
+    // ##########################################################################################
+
+    function ActivateFirstTabControl() {
+
+        var classContentList = [];
+
+        @foreach (PreUni.College.DAL.ViewModel.ProgressCommentVM vm in Model)
+        {
+            // Get class-value of the first tab-control
+            @: var currentFirstClassVal = $('#pills-1-@vm.StudentID-tab').attr('class');
+            // Add new class-value, active
+            @: currentFirstClassVal = currentFirstClassVal + ' active';
+            // Replace it with new class-val
+            @: $('#pills-1-@vm.StudentID-tab').attr('class', currentFirstClassVal);
+
+            // get class-value of the first tab-content
+            @:var currentFirstTabContent = $('#pills-1-@vm.StudentID').attr('class');
+            // Add new class-value, active
+            @: currentFirstTabContent = currentFirstTabContent + ' fade show active';
+            // Replace it with new class-val
+            @: $('#pills-1-@vm.StudentID').attr('class', currentFirstTabContent);
+            @: classContentList.push(currentFirstTabContent);
+        }
+        //console.log(classContentList);
+    }
+
+    // Display
+    ActivateFirstTabControl();
+
+    function deleteActiveTabControl(studentId) {
+
+        if (globalCurrentTabLocation == null) {
+
+            globalCurrentTabLocation = 'pills-1' + '-' + studentId;
+
+            $('#' + globalCurrentTabLocation).removeClass('active');
+            $('#' + globalCurrentTabLocation+'-tab').removeClass('show');
+            $('#' + globalCurrentTabLocation + '-tab').removeClass('active');
+
+            //console.log(globalCurrentTabLocation + " -by deleteActiveTabControl-if");
+        }
+        else {
+
+            // Delete n-th tab-control
+            // ID into Class
+            $('#' + globalCurrentTabLocation).removeClass('active');
+
+            // ex> pills-2-4075929-tab into  pills-2-4075929
+            // Delete the last letter, -tab. The function substring just gets the letter index 0 to the second param
+            globalCurrentTabLocation = globalCurrentTabLocation.substring(0, globalCurrentTabLocation.length - 4);
+            //console.log(globalCurrentTabLocation);
+            $('#' + globalCurrentTabLocation).removeClass('show');
+            $('#' + globalCurrentTabLocation).removeClass('active');
+
+            //console.log(globalCurrentTabLocation + " -by deleteActiveTabControl-if");
+        }
+    }
+
+    function AddNewTabControl(thisClass) {
+
+        var studentId = $(thisClass).attr('studentId'); // studentId
+        var commentIdx = $(thisClass).attr('commentIdx'); // comment Index
+
+        //var currnetClass = $(thisClass).attr('class'); // current class values
+        //console.log(currnetClass);
+
+        // test
+        //console.log("stu Id: " + studentId);
+        //console.log("comment Idx: " + commentIdx);
+
+        // Delete the previos active state on tab-control and tab-content
+        deleteActiveTabControl(studentId);
+
+        // Ajax Call to pull to append a new tab-control into the tab
+        $.ajax({
+            url: '/ProgressComment/GetNewCommentTabControl',
+            type: 'POST',
+            data: { studentId: studentId, commentIdx: commentIdx },
+            success: function (data) {
+
+                // data is a parital view and it is inserted into certain location. Look structure of 'thisClass' above. It points Tab-Control.
+                $(thisClass).parent().parent().append(data);
+
+                // change index of plus-tab-control
+                var nexIdxForComment = parseInt(commentIdx) + 1;
+                var newCommentIdx = $(thisClass).attr('commentIdx', nexIdxForComment);
+
+                //Test
+                //console.log("prior comment index: " + commentIdx);
+                //console.log("new comment index: " + newCommentIdx);
+
+                // Load a new content from a new tab-control
+                AddNewTabContent(studentId, commentIdx);
+            },
+            error: function () {
+                alert("Fail to load. Try again");
+            }
+        }); // end ajax
+    }
+
+    function AddNewTabContent(studentId, commentIdx) {
+
+        var classID = '@Model.FirstOrDefault().ClassID';
+
+        // Ajax Call to pull to append a new tab-control into the tab
+        $.ajax({
+            url: '/ProgressComment/GetNewCommentTabContent',
+            type: 'POST',
+            data: { classId: classID, studentId: studentId, commentIdx: commentIdx },
+            success: function (data) {
+
+                // Remove active state on Plus-button
+                $("#pills-plus-" + studentId + "-tab").removeClass('active');
+
+                // * Locate data into proper position
+                //  - Find 
+
+                //  - 1st method : this is not working when there's nothing on comments because... See...
+                //var prevCommentIdx = parseInt(commentIdx) - 1;
+                //var targetVal = '#pills-' + prevCommentIdx + '-' + studentId;
+
+                //  - Append
+                //$(targetVal).append(data);
+
+                //  -2nd method: pills-plus-4077132-tab
+                var HelperFortargetVal = '#pills-plus-' + studentId+'-tab';
+                var targetVal = $(HelperFortargetVal).parent().parent().parent().find('#pills-tabContent').append(data);
+
+                //Save a student's comment
+                $(".SaveBtn").on("click", function () {
+
+                    TriggerSaveEvent(this);
+                });
+            },
+            error: function () {
+                alert("Fail to load. Try again");
+            }
+        }); // end ajax
+    }
+
+    // * Remembers the currenft tab location
+    //  - All tabs from each students starts from 1 based-index.
+    //  - In this case, globalCurrentTabLocation is null
+    //  - Look the JS function, deleteActiveTabControl and AddNewTabControl. 
+    //  - These functions are connected and dependent one another.
+    var globalCurrentTabLocation;
+    $('.TabzControlListener').click(function () {
+        globalCurrentTabLocation = $(this).attr('id');
+        //console.log(globalCurrentTabLocation + " -by TabzControlListener");
+    });
+
+    // obj means save btn.
+    function TriggerSaveEvent(obj) {
+
+        // TODO: Poor design
+        var tabContentParent = $(obj)
+                                //
+                                .parent()
+                                //
+                                .parent()
+                                //
+                                .parent();
+        // TODO: Poor design
+        var Parent = $(obj)
+                        .parent()
+                        .parent()
+                        .parent()
+                        .parent()
+                        .parent()
+                        .parent();
+                                
+        $(tabContentParent).attr('tab-Number');
+        
+        var targetWeek = $(tabContentParent).find('.row:eq(0) .col-12:eq(0) #weekClassName').val();
+        if (targetWeek == 0)
+        {
+            alert("Please select the week.");
+            return;
+        }
+
+        var targetWriter = $(tabContentParent).find('.row:eq(0) .col-12:eq(2) #editorClassName').val(); 
+        if (targetWriter === "")
+        {
+            alert("Please input the writer.");
+            return;
+        }
+
+        var _ClassID = $(Parent).attr('ClassID');
+        var _StudentID = $(Parent).attr('StudentID');
+
+        var _Attitude1 = $(tabContentParent).find('.row:eq(1) .col-12:eq(0) #behaviourClassName').val();
+        var _Attitude2 = $(tabContentParent).find('.row:eq(1) .col-12:eq(1) #participationClassName').val();
+        var _Attitude3 = $(tabContentParent).find('.row:eq(1) .col-12:eq(2) #workHabitsClassName').val();
+
+        var _Comment = $(tabContentParent).find('.row:eq(2) .commentClassName').val();
+
+        // TeacherID
+        var _Teacher = $(tabContentParent).find('.row:eq(0) .col-12:eq(1) #teacherClassName').val(); 
+        var _Editor = targetWriter;
+        var _CommentID = $(tabContentParent).find('#commentIDClassName').val();
+
+        var Selected = $(this);
+
+        var URL = '@Url.Content("~/ProgressComment/Save")';
+        $.ajax({
+            url: URL,
+            type: 'POST',
+            data: { ClassID: _ClassID, StudentID: _StudentID, Attitude1: _Attitude1, Attitude2: _Attitude2, Attitude3: _Attitude3, Comment: _Comment, Week: targetWeek, Teacher: _Teacher, Editor: _Editor, CommentID: _CommentID },
+            success: function (json) {
+
+                $(tabContentParent).find('#commentIDClassName').val(json.Result);
+
+                alert("Saved!");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (errorThrown == "Unauthorized") {
+                    alert("Your login session has been expired. So you can't record the Term test comments.");
+                }
+                else {
+                    alert(errorThrown);
+                    alert("3.Request timed out. Please try again or contact system administrator ");
+                }
+            }
+        });
+    }
+
+    //Save a student's comment
+    $(".SaveBtn").on("click",function () {
+        TriggerSaveEvent(this);
+    }); // End of Save Click
+    
+</script>

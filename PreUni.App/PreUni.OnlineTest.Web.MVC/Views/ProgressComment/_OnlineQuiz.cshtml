@@ -1,0 +1,59 @@
+﻿@model List<PreUni.College.DAL.Model.OnlineQuizScore>
+
+<div style="float:left;">
+
+    @if (@Model.Count() > 0)
+    {
+        <table style="max-width: 100%; font-family: 'Segoe UI'" data-role="table" class="ui-responsive">
+
+            <tr>
+                <th colspan="@(Model.Count()+1)" style="text-align:center;">Special Online Quiz<br />(Previous Term)</th>
+            </tr>
+
+            <tr>
+                <th colspan="@(Model.Count()+1)">&nbsp;</th>
+            </tr>
+
+            <tr>
+                <td></td>
+                @foreach (PreUni.College.DAL.Model.OnlineQuizScore score in Model)
+                {
+                    <th style="text-align:center;">No.@score.TestNo</th>
+                }
+            </tr>
+
+            <tr>
+                <th>Eng</th>
+                @foreach (PreUni.College.DAL.Model.OnlineQuizScore score in Model)
+                {
+                    <td style="text-align:right;">@score.Eng</td>
+                }
+            </tr>
+            <tr>
+                <th>Maths</th>
+                @foreach (PreUni.College.DAL.Model.OnlineQuizScore score in Model)
+                {
+                    <td style="text-align:right;">@score.Maths</td>
+                }
+
+            </tr>
+
+            <tr>
+                <th>GA</th>
+                @foreach (PreUni.College.DAL.Model.OnlineQuizScore score in Model)
+                {
+                    <td style="text-align:right;">@score.GA</td>
+                }
+            </tr>
+
+            <tr>
+                <th>AVG</th>
+                @foreach (PreUni.College.DAL.Model.OnlineQuizScore score in Model)
+                {
+                    <td style="text-align:right;">@score.AVG</td>
+                }
+            </tr>
+
+        </table>
+    }
+</div>

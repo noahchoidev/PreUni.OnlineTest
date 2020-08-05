@@ -1,0 +1,195 @@
+﻿@model PreUni.OnlineTest.Web.MVC.ViewModel.OnlineWritingViewModel
+
+@{
+    ViewBag.Title = "MarkNow";
+}
+
+<div class="container">
+
+    <!--Main Content for Marking Itmes-->
+    <div class="mt-5 pt-5">
+        <div class="form-horizontal">
+            <!--Header-->
+            <h4>
+                <span>
+                    Mark Now
+                </span>
+                <span id="StudentID">
+
+                </span>
+            </h4>
+            <!--./Header-->
+
+            <hr />
+
+            <!--Tab Control Buttons-->
+            <ul class="nav nav-pills my-3" id="pills-tab" role="tablist">
+  
+                <li class="nav-item">
+                    <a class="nav-link"
+                       onclick="TabListener(this)"
+                       TestType="GeneralTest" 
+                       id="GeneralTest-tab"
+                       data-toggle="pill"
+                       href="#GeneralTest-tab-content" 
+                       role="tab"
+                       aria-controls="GeneralTest-tab-content" 
+                       aria-selected="false">
+                        Writing
+                    </a>
+                </li>
+
+                <li class="nav-item @((Model.TestTypeID == 17) ? "invisible":"") ">
+                    <a class="nav-link"
+                       onclick="TabListener(this)"
+                       TestType="Re-Test"
+                       id="ReWritingTest-tab" data-toggle="pill"
+                       href="#ReWritingTest-tab-content"
+                       role="tab" 
+                       aria-controls="ReWritingTest-tab-content"
+                       aria-selected="false">
+                        Writing Re-Test
+                    </a>
+                </li>
+            </ul>
+            <!--./Tab Control Buttons-->
+
+            <!--Tab Content-->
+            <div class="tab-content py-5" id="pills-tabContent">
+
+                <!--General Test-->
+                <div class="tab-pane"
+                     id="GeneralTest-tab-content"
+                     role="tabpanel"
+                     aria-labelledby="GeneralTest-tab">
+
+                    <div class="GeneralTestArea">
+                    </div>
+                </div>
+                <!--./General Test-->
+
+                <!--Re-Test-->
+                <div class="tab-pane fade"
+                     id="ReWritingTest-tab-content"
+                     role="tabpanel"
+                     aria-labelledby="ReWritingTest-tab">
+
+                    <div class="ReTestArea">
+                    </div>
+                </div>
+                <!--./Re-Test-->
+
+            </div>
+            <!--./Tab Content-->
+
+            <hr />
+        </div>
+
+    </div>
+    <!--./Main Content for Marking Itmes-->
+
+    <!--Back to the prev-page-->
+    <div>
+        @if (Model.TestTypeID == 17)
+        {
+            @Html.ActionLink("Back to List", "STTCReWriting");
+        }
+        else
+        {
+            @Html.ActionLink("Back to List", "Index");
+        }
+
+    </div>
+    <!--./Back to the prev-page-->
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script>
+
+    function TabListener(obj) {
+
+        var target = $(obj).attr('TestType');
+
+        var IsGeneralArea;
+        if (target == 'Re-Test')
+            IsGeneralArea = 0;
+        else
+            IsGeneralArea = 1;
+
+        var studentID = '@Model.StudentID';
+        var testID = '@Model.TestID';
+        var testTypeID = '@Model.TestTypeID';
+
+        $.ajax({
+            url: '@Url.Action("GetWritingTest", "Assessment")',
+            type: 'POST',
+            data: { studentID: studentID, TestID: testID, IsGeneralArea: IsGeneralArea, TestTypeID: testTypeID },
+            success: function (data) {
+
+                $('#Total-Score').text(0);
+                if (IsGeneralArea == 1) {
+
+                    $('.ReTestArea').html('...');
+                    $('.GeneralTestArea').html(data);
+                }
+                else {
+
+                    $('.GeneralTestArea').html('...');
+                    $('.ReTestArea').html(data);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("No Data.");
+            }
+        });
+    }
+
+    $('#FormSubmitID').submit(function () {
+
+        var url = '@Url.Action("MarkNow", "Assessment")';
+        var fu = "newValueOfFU"; // New value for FU
+
+        $('#Mark').prop('action', url + "?FU=" + fu);
+
+        return true;
+    });
+
+    function InitializeTab() {
+
+        // Getting Info to determine test-type if it's General test-type or Re-test type
+        var IsGeneralTest = '@Model.IsGeneralTest';
+
+        // Getting a selector according to the above result (ID)
+        var selectorForTab;
+        if (IsGeneralTest == 'True') {
+            selectorForTab = "#GeneralTest-tab";
+        } else {
+            selectorForTab = "#ReWritingTest-tab";
+        }
+
+        // Assign aictive in tab-control and 'fade show active' in tab-content
+        $(selectorForTab).addClass('active');
+        $(selectorForTab + '-content').addClass('fade show active');
+    }
+
+    function Loading() {
+
+        InitializeTab();
+
+        var IsGeneralArea = '@Model.IsGeneralTest';
+        var selector;
+
+        if (IsGeneralArea == 'True') {
+            selector = $('#GeneralTest-tab');
+        }
+        else {
+            selector = $('#ReWritingTest-tab');
+        }
+        TabListener(selector);
+    }
+
+    Loading();
+</script>

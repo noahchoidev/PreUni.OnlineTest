@@ -1,0 +1,394 @@
+﻿@model PreUni.College.DAL.ViewModel.ProgressCommentVM
+
+<div class="border border-dark pt-3 mt-5 px-2">
+    
+    <div StudentID="@Model.StudentID" ClassID="@Model.ClassID">
+
+        <!--Photo & Term-test Result-->
+        <div class="StudentInfo row">
+            <!--Studnet Photo-->
+            <div class="PhotoWrap col-sm-4 my-auto">
+                <div class="StudentPhoto std-photo">
+                    <img class="StudentImage"
+                         src="http://app.newcollege.com.au:8080/studentphoto/@(Model.StudentID).jpg"
+                         onerror="showErrorImg(this)">
+                </div>
+            </div>
+            <!--./Studnet Photo-->
+
+            <!--Term Result-->
+            <div class="TermResultWrap col-sm-8">
+
+                <!--StudentName and ID-->
+                <div class="text-center text-sm-left mb-3">
+                    <h4 class="d-inline">
+                        <strong>@Model.StudentName</strong>
+                    </h4>
+                    <span>
+                        (
+                    </span>
+                    <span class="StudentIDLbl">
+                        <strong>@Model.StudentID</strong>
+                    </span>
+                        )
+                </div>
+                <!--./StudentName and ID-->
+
+                <!--Score-->
+                <div class="ScoreTable">
+
+                    <table class="table table-striped table-bordered text-center small">
+                    
+                        <tr>
+                            <th></th>
+                            <th class="px-5">Previous Term</th>
+                            <th class="px-5">Current Term</th>
+                        </tr>
+                    
+                        <tr>
+                            <th class="Score">Eng</th>
+                        
+                            @foreach (PreUni.College.DAL.Model.ClassResults score in Model.StudentRecord)
+                            {
+                            <td>
+                                @(
+                                    (score.TotalRanking == 0) ? 
+                                        " " : score.Eng.ToString()
+                                 )
+                            </td>
+                            }
+                        </tr>
+
+                        <tr>
+                            <th class="Score">Maths</th>
+                            @foreach ( PreUni.College.DAL.Model.ClassResults score in Model.StudentRecord)
+                            {
+                            <td>
+                                @(
+                                    (score.TotalRanking == 0) ? 
+                                        " " : score.Maths.ToString()
+                                )
+                            </td>
+                            }
+                        </tr>
+
+                        <tr>
+                            <th class="Score">GA</th>
+                            @foreach ( PreUni.College.DAL.Model.ClassResults score in Model.StudentRecord)
+                            {
+                            <td>
+                                @(
+                                    (score.TotalRanking == 0) ? 
+                                        " " : score.GA.ToString()
+                                )
+                            </td>
+                            }
+                        </tr>
+
+                        <tr>
+                            <th class="Score">Writing</th>
+                            @foreach ( PreUni.College.DAL.Model.ClassResults score in Model.StudentRecord)
+                            {
+                            <td>
+                                @(
+                                    (score.TotalRanking == 0) ? 
+                                        " " : score.Writing.ToString()
+                                )
+                            </td>
+                            }
+                        </tr>
+
+                        <tr>
+                            <th class="Score">AVG</th>
+                            @foreach ( PreUni.College.DAL.Model.ClassResults score in Model.StudentRecord)
+                            {
+                            <td>
+                                @((score.TotalRanking == 0) ?
+                                    " " : score.StudentAVG.ToString())
+                            </td>
+                            }
+                        </tr>
+
+                        <tr>
+                            <th class="Score">Ranking</th>
+                            @foreach ( PreUni.College.DAL.Model.ClassResults score in Model.StudentRecord)
+                            {
+                            <td>
+                                @(
+                                    (score.TotalRanking == 0) ?
+                                        " " : score.StudentRanking.ToString() + " / " + score.TotalRanking
+                                )
+                            </td>
+                            }
+                        </tr>
+
+                        <tr>
+                            <th class="Score">YearAVG</th>
+                            @foreach ( PreUni.College.DAL.Model.ClassResults score in Model.StudentRecord)
+                            {
+                                <td>
+                                    @(
+                                        (score.TotalRanking == 0) ?
+                                            " " : score.GradeAVG.ToString()
+                                    )
+                                </td>
+                            }
+                        </tr>
+                    </table>
+                </div>
+                <!--./Score-->
+
+            </div>
+            <!--./Term Result-->
+        </div>
+        <!--./Photo & Term-test Result-->
+
+        <!--More Record Button-->
+        <div class="MoreRecord OnlineQuizAndHomeworkMark_Area">
+            <a class="d-block text-center" href="">More Records</a>
+            <div class="MoreRecord-Content row">
+                <div class="col col-12 col-lg-6 mx-auto my-auto text-center"></div>
+                <div class="col col-12 col-lg-6 mx-auto my-auto text-center"></div>
+            </div>
+        </div>
+        <!--./More Record Button-->
+    
+        <!--Student Content-->
+        <div class="tabs">
+        
+            <!--Tab Control Buttons-->
+            <ul class="TabControl nav nav-pills my-3" id="pills-tab" role="tablist">
+                @{
+                    int commentIdx;
+                    for (commentIdx = 0; commentIdx < Model.TeacherProgressComments.Count(); commentIdx++)
+                    {
+                        <!--Identifier ex> #tabs-2-4077132
+                            Tab starts from 1, not 0 (Caution index!)
+                        -->
+                        <li class="col-12 col-sm-6 col-md-3 nav-item">
+                            <a class="TabzControlListener nav-link text-wrap text-center" id="pills-@(commentIdx+1)-@Model.StudentID-tab" data-toggle="pill" 
+                                href="#pills-@(commentIdx+1)-@Model.StudentID" role="tab" aria-controls="pills-@(commentIdx+1)-@Model.StudentID" aria-selected="false">
+                                <span class="">
+                                    Comment @(commentIdx + 1)
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    <!--Plus Comment Control-->
+                    <li class="col-12 col-sm-6 col-md-3 nav-item">
+                        <a class="nav-link text-wrap text-center" id="pills-plus-@(Model.StudentID)-tab" onclick="AddNewTabControl(this)"
+                           data-toggle="pill" role="tab" studentId="@Model.StudentID" commentIdx="@(commentIdx+1)">
+                            <i class="fa fa-plus-square fa-2x mr-1" aria-hidden="true"></i>
+                            <div class="h4 d-inline">Comment</div>
+
+                        </a>
+                    </li>
+                    <!--Plus Comment Control-->
+                }
+            </ul>
+            <!--./Tab Control Buttons-->
+
+            <!--Tab Content-->
+            <div class="TabContent tab-content py-4" id="pills-tabContent">
+                <!--Comment Contents-->
+                @{
+                    int seq = 0;
+
+                    // This is for local time, which is lcoated below html-control, textbox eX> 19/02/2020 15:54:24.983
+                    System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-AU");
+
+                    string[] progressGrade = { "A", "B", "C", "D", "E" };
+                }
+                @foreach (PreUni.College.DAL.Model.ProgressComments cm in Model.TeacherProgressComments)
+                {
+                    seq++;
+
+                    <!--Tab k-->
+                    <div class="tab-pane" id="pills-@(seq)-@Model.StudentID" tab-Number="@(seq)"
+                            role="tabpanel" aria-labelledby="pills-@(seq)-@Model.StudentID-tab">
+                    
+                        <!--First Row-->
+                        <div class="row my-2">
+
+                            <!--Week Dropdown-->
+                            <div class="col-12 col-sm-2 d-flex flex-column my-2">
+                                <span>
+                                    Week
+                                </span>
+                                <select id="weekClassName">
+                                    @for (int i = 1; i <= Model.CourseWeek; i++)
+                                    {
+                                        if (i == cm.Week)
+                                        {
+                                            <option value="@i" selected>@i</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <!--./Week Dropdown-->
+
+                            <!--Teacher Dropdown-->
+                            <div class="col-12 col-sm-4 d-flex flex-column my-2">
+                                Teacher
+                                <select ID="teacherClassName">
+                                    @foreach (PreUni.College.DAL.Model.TeacherModel tm in Model.TeacherRecord)
+                                    {
+                                        if (tm.TeacherID == cm.TeacherID)
+                                        {
+                                            <option value="@tm.TeacherID" selected>@tm.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@tm.TeacherID">@tm.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <!--./Teacher Dropdown-->
+
+                            <!--Writer EditBox-->
+                            <div class="col-12 col-sm-4 d-flex flex-column my-2">
+                                Writer
+                                <input type="text" id="editorClassName" name="editorClassName" class="editorClassName" value="@cm.Editor" />
+                            </div>
+                            <!--./Writer EditBox-->
+
+                            <!--Dump-->
+                            <div class="col-12 col-sm-2 my-2">
+                            </div>
+                            <!--Dump-->
+
+                        </div>
+                        <!--./First Row-->
+
+                        <!--Second Row-->
+                        <div class="row my-2">
+
+                            <!--Behavior-->
+                            <div class="col-12 col-sm-2 d-flex flex-column">
+                                <span>
+                                    Behaviour
+                                </span>
+                                <select id="behaviourClassName">
+                                    <option value="">-</option>
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        if (progressGrade[i].ToString().Equals(cm.Attitude1))
+                                        {
+                                            <option value="@progressGrade[i]" selected>@progressGrade[i]</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@progressGrade[i]">@progressGrade[i]</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <!--./Behavior-->
+
+                            <!--Participation-->
+                            <div class="col-12 col-sm-4 d-flex flex-column">
+                                Participation
+                                <select id="participationClassName">
+                                    <option value="">-</option>
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        if (progressGrade[i].ToString().Equals(cm.Attitude2))
+                                        {
+                                            <option value="@progressGrade[i]" selected>@progressGrade[i]</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@progressGrade[i]">@progressGrade[i]</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <!--./Participation-->
+
+                            <!--WorkHabits-->
+                            <div class="col-12 col-sm-4 d-flex flex-column">
+                                Work Habits
+                                <select id="workHabitsClassName">
+                                    <option value="">-</option>
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        if (progressGrade[i].ToString().Equals(cm.Attitude3))
+                                        {
+                                            <option value="@progressGrade[i]" selected>@progressGrade[i]</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@progressGrade[i]">@progressGrade[i]</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <!--WorkHabits-->
+                        
+                            <!--Save(Submit)-->
+                            <div class="col-12 col-sm-2 d-flex flex-column">
+                                <span>Button</span>
+                                <button class="btn btn-sm btn-block btn-warning SaveBtn">SAVE</button>
+                            </div>
+                            <!--Save(Submit)-->
+                        </div>
+
+                        <!--Comment Area-->
+                        <div class="row my-2 px-3 py-1">
+                            <textarea class="commentClassName col-12" rows="5">
+                                @if(cm.Comment.Length != 0)
+                                {
+                                    @cm.Comment
+                                }
+                            </textarea>
+                        </div>
+                        <!--./Comment Area-->
+
+                        <!--Time Zone and monitoring user comment writing-->
+                        <div class="row my-2">
+
+                            <!--Time Zone-->
+                            <div class="col-6 text-left">
+                                @cm.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss.fff", culture)
+                            </div>
+                            <!--./Time Zone-->
+                        
+                            <!--Monitoring Comment Length-->
+                            <div class="CommentLimit col-6 text-right">
+                                @(2000 - @cm.Comment.Length) characters left
+                            </div>
+                            <!--./Monitoring Comment Length-->
+                        </div>
+                        <!--./Time Zone and monitoring user comment writing-->
+
+                        <input type="hidden" 
+                               name="commentIDClassName"
+                               id="commentIDClassName"
+                               class="commentIDClassName"
+                               value="@cm.CommentID" />
+                    </div>
+                }
+                <!--./Comment Contents-->
+            </div>
+            <!--./Tab Content-->
+        </div>
+        <!--./Student Content-->
+    </div>
+</div>
+
+<script>
+    function showErrorImg(imgElm) {
+
+        // What is this? 
+        // After this line is deleted, all others of javascript was not working. 
+        imgElm.onerror = "";
+
+        // Replace an image with errors with Alternative.
+        imgElm.src = "../Resource/Image/nophoto.png";
+    }
+</script>

@@ -1,0 +1,69 @@
+﻿@model IEnumerable<PreUni.Core.Model.Exam>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TestTerm.TermName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TestType.TestTypeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Year)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExamDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EditedAt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DeletedAt)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TestTerm.TermName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TestType.TestTypeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Year)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExamDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EditedAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DeletedAt)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ExamID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ExamID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ExamID })
+        </td>
+    </tr>
+}
+
+</table>

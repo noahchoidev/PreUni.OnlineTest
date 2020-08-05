@@ -1,0 +1,142 @@
+﻿@model PreUni.OnlineTest.Web.MVC.ViewModel.ProgressCommentTabContentViewModel
+
+<!--Tab k-->
+<div class="tab-pane fade show active" id="pills-@(Model.CommentIndex)-@Model.StudentID" tab-Number="@(Model.CommentIndex)"
+     role="tabpanel" aria-labelledby="pills-@(Model.CommentIndex)-@Model.StudentID-tab">
+
+    @{ 
+        System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-AU");
+        string[] progressGrade = { "A", "B", "C", "D", "E" };
+    }
+    <!--First Row-->
+    <div class="row my-2">
+
+        <!--Week Dropdown-->
+        <div class="col-12 col-sm-2 d-flex flex-column my-2">
+            <span>
+                Week
+            </span>
+            <select id="weekClassName">
+                @for (int i = 1; i <= Model.ProgressCommentVM.CourseWeek; i++)
+                {
+                <option value="@i">@i</option>
+                }
+            </select>
+        </div>
+        <!--./Week Dropdown-->
+
+        <!--Teacher Dropdown-->
+        <div class="col-12 col-sm-4 d-flex flex-column my-2">
+            Teacher
+            <select ID="teacherClassName">
+
+                @foreach (PreUni.College.DAL.Model.TeacherModel tm in Model.ProgressCommentVM.TeacherRecord)
+                {
+                    <option value="@tm.TeacherID">@tm.Name</option>
+                }
+            </select>
+        </div>
+        <!--./Teacher Dropdown-->
+
+        <!--Writer EditBox-->
+        <div class="col-12 col-sm-4 d-flex flex-column my-2">
+            Writer
+            <input type="text" id="editorClassName" name="editorClassName" class="editorClassName" value=""/>
+        </div>
+        <!--./Writer EditBox-->
+
+        <!--Dump-->
+        <div class="col-12 col-sm-2 my-2">
+        </div>
+        <!--Dump-->
+
+    </div>
+    <!--./First Row-->
+
+    <!--Second Row-->
+    <div class="row my-2">
+
+        <!--Behavior-->
+        <div class="col-12 col-sm-2 d-flex flex-column">
+            <span>
+                Behaviour
+            </span>
+            <select id="behaviourClassName">
+                <option value="">-</option>
+                @for (int i = 0; i < 5; i++)
+                {
+                <option value="@progressGrade[i]">@progressGrade[i]</option>
+                }
+            </select>
+        </div>
+        <!--./Behavior-->
+
+        <!--Participation-->
+        <div class="col-12 col-sm-4 d-flex flex-column">
+            Participation
+            <select id="participationClassName">
+                <option value="">-</option>
+                @for (int i = 0; i < 5; i++)
+                {
+                <option value="@progressGrade[i]">@progressGrade[i]</option>
+                }
+            </select>
+        </div>
+        <!--./Participation-->
+
+        <!--WorkHabits-->
+        <div class="col-12 col-sm-4 d-flex flex-column">
+            Work Habits
+            <select id="workHabitsClassName">
+                <option value="">-</option>
+                @for (int i = 0; i < 5; i++)
+                {
+                 <option value="@progressGrade[i]">@progressGrade[i]</option>
+                }
+            </select>
+        </div>
+        <!--WorkHabits-->
+
+        <!--Save(Submit)-->
+        <div class="col-12 col-sm-2 d-flex flex-column">
+            <span>Button</span>
+            <button class="btn btn-sm btn-block btn-warning SaveBtn">SAVE</button>
+        </div>
+        <!--Save(Submit)-->
+
+    </div>
+    <!--Second Row-->
+
+    <!--Comment Area-->
+    <div class="row my-2 px-3 py-1">
+        <textarea class="commentClassName col-12" rows="5">
+        </textarea>
+    </div>
+    <!--./Comment Area-->
+
+    <!--Time Zone and monitoring user comment writing-->
+    <div class="row my-2">
+
+        <!--Time Zone-->
+        <div class="col-6 text-left">
+            @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.fff", culture)
+        </div>
+        <!--./Time Zone-->
+
+        <!--Monitoring Comment Length-->
+        <div class="CommentLimit col-6 text-right">
+            @(2000 - 0) characters left
+        </div>
+        <!--./Monitoring Comment Length-->
+
+    </div>
+    <!--./Time Zone and monitoring user comment writing-->
+
+    <!--Value -1 means this comment-Area is newly added making difference between the existing comment-->
+    <input type="hidden" 
+           name="commentIDClassName" 
+           id="commentIDClassName" 
+           class="commentIDClassName"
+           value="-1" />
+
+</div>

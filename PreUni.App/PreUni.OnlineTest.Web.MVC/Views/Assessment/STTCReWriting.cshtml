@@ -1,0 +1,201 @@
+﻿@model PreUni.OnlineTest.Web.MVC.ViewModel.WritingSearchFilterViewModel
+
+@{
+    ViewBag.Title = "Writing Re-Test";
+}
+
+<div class="container-fluid mt-5 pt-5">
+
+    <!--Search Controls-->
+    <div class="STTC_Area">
+        <div class="container-fluid">
+            <h2>STTC Writing Re-Test</h2>
+            <hr />
+        </div>
+
+        <div class="container-fluid">
+
+            <div class="form-row align-items-center mt-2">
+
+                <!--Select Test-Type-->
+                <div class="col-12 col-sm-auto my-2">
+
+                    <label class="sr-only" for="selectTest">--Test Type--</label>
+                    <select name="selectTest" id="selectTest" class="form-control ReChangeEventForSearch BranchTriggerEvent">
+                        <option value="">--Test Type--</option>
+                        <option selected="selected" value="17">STTC Writing Re-Test</option>
+                    </select>
+                </div>
+                <!--./Select Test-Type-->
+
+                <!--Select Year-->
+                <div class="col-12 col-sm-auto my-2">
+
+                    <label class="sr-only" for="selectYear">Year</label>
+                    <select name="selectYear" id="selectYear" class="form-control ReChangeEventForSearch BranchTriggerEvent">
+                        @foreach (var item in ViewBag.YearList)
+                        {
+                            if (item == 0)
+                            {
+                                continue;
+                            }
+
+                            if (item == Model.Year)
+                            {
+                                <option value="@item" selected>@item</option>
+                            }
+                            else
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <!--./Select Year-->
+
+                <!--Select Term-->
+                <div class="col-12 col-sm-auto my-2">
+
+                    <label class="sr-only" for="selectTerm">Term</label>
+                    <select name="selectTerm" id="selectTerm" class="form-control ReChangeEventForSearch BranchTriggerEvent">
+                        <option value="">--Term--</option>
+                        <option value="Summer">Summer</option>
+                        <option value="1">Term 1</option>
+                        <option value="Autumn">Autumn</option>
+                        <option value="2">Term 2</option>
+                        <option value="Winter">Winter</option>
+                        <option value="3">Term 3</option>
+                        <option value="Spring">Spring</option>
+                        <option value="4">Term 4</option>
+                    </select>
+                </div>
+                <!--./Select Term-->
+
+                <!--Select TestNo-->
+                <div class="col-12 col-sm-auto my-2">
+
+                    <label class="sr-only" for="selectTestNo">TestNo</label>
+                    <select name="selectTestNo" id="selectTestNo" class="form-control ReChangeEventForSearch">
+                        <option value="">--Test No--</option>
+                        <option value="1">No 1</option>
+                        <option value="2">No 2</option>
+                        <option value="3">No 3</option>
+                        <option value="4">No 4</option>
+                        <option value="5">No 5</option>
+                        <option value="6">No 6</option>
+                        <option value="6">No 7</option>
+                        <option value="6">No 8</option>
+                        <option value="6">No 9</option>
+                        <option value="6">No 10</option>
+                        <option value="6">No 11</option>
+                        <option value="6">No 12</option>
+                        @*<option value="6">No 6</option>
+                            <option value="7">No 7</option>*@
+                    </select>
+                </div>
+                <!--./Select Term-->
+
+                <!--Select Branch-Type-->
+                <div class="col-12 col-sm-auto my-2">
+
+                    <label class="sr-only" for="selectBranch">Branch</label>
+                    <select name="selectBranch" id="selectBranch" class="form-control BranchClassEvent ReChangeEventForSearch ReClassTriggerEvent">
+                        <option value="">Branch-Type</option>
+                    </select>
+                </div>
+                <!--./Select Test-Type-->
+
+                <!--Select Class-->
+                <div class="col-12 col-sm-auto my-2">
+
+                    <label class="sr-only" for="selectClass">Class</label>
+                    <select name="selectClass" id="selectClass" class="form-control ReChangeEventForSearch">
+                        <option value="">--Class All--</option>
+                    </select>
+                </div>
+                <!--./Select Class-->
+
+                <!--Select Complted-->
+                <div class="col-12 col-sm-auto my-2">
+
+                    <label class="sr-only" for="selectCompleted">Completed</label>
+                    <select name="selectCompleted" id="selectCompleted" class="form-control ReChangeEventForSearch">
+                        <option value="">--Test--</option>
+                        <option value="1">Done</option>
+                        <option value="0">Not yet</option>
+                    </select>
+                </div>
+                <!--./Select Complted-->
+
+                <!--Select Mark-->
+                <div class="col-12 col-sm-auto my-2">
+
+                    <label class="sr-only" for="selectMarked"></label>
+                    <select name="selectMarked" id="selectMarked" class="form-control ReChangeEventForSearch">
+                        <option value="">--Marking--</option>
+                        <option value="1">Done</option>
+                        <option value="0">Not yet</option>
+                    </select>
+                </div>
+                <!--./Select Mark-->
+
+                <!--Radio Buttons for selecting between Writing & Rewriting-->
+                <div class="col-12 col-sm-auto my-2 invisible">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        @{ 
+                            var Active = Model.IsGeneralTest == true ? "active" : "";
+                            var Checked = Model.IsGeneralTest == true ? "checked" : "";
+                        }
+                        <label class="btn btn-secondary @Active">
+                            <input type="radio"
+                                   name="RetestAvailability"
+                                   class="RetestAvailability ChangeEventForSearch" 
+                                   id="General_Radio"
+                                   value="true"
+                                   autocomplete="off" @Checked> Writing
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" 
+                                   name="RetestAvailability" 
+                                   class="RetestAvailability ChangeEventForSearch" 
+                                   id="Retest_Radio"
+                                   value="false"
+                                   autocomplete="off"> Re-Writing
+                        </label>
+                    </div>
+                </div>
+                <!--./Radio Buttons for selecting between Writing & Rewriting-->
+            </div>
+        </div>
+    </div>
+    <!--./Search Controls-->
+
+    <!--Search Content List-->
+    <div class="Search-Content-List mx-auto text-center">
+    </div>
+    <!--./Search Content List-->
+</div>
+
+<script src="~/Scripts/OnlineWriting.js"></script>
+<script>
+
+    // This funciton is only triggered when this page is loaded first time.
+    function OnLoading() {
+
+        var selectedTerm = '@Model.Term';
+        InitializeTermTest(selectedTerm);
+
+        var selectedTeestNo = '@Model.TestNo';
+        InitializeTestNo(selectedTeestNo);
+
+        SetBranchesSelectBox();
+
+        var IsGeneralTest = '@Model.IsGeneralTest';
+        InitializeGeneralTestTab(IsGeneralTest);
+
+        var writingSearchFilterModel = new WritingSearchFilterModel();
+        ListenChangesFromSearchControlFrom(writingSearchFilterModel);
+    }
+
+    OnLoading();
+</script>

@@ -1,0 +1,312 @@
+﻿@using PreUni.Core.Model.Local
+@using Microsoft.AspNet.Identity;
+
+<!--Classes for teacher-->
+<div id="myClassWrapper" class="container pt-5 mt-5">
+
+    <h2>My Classes</h2>
+
+    <!--Manage Bar-->
+    <div class="form-row align-items-center my-4">
+
+        <!--Year Selection-->
+        <div class="col-12 col-sm-auto my-2">
+
+            <label class="sr-only" for="selectYearMy">Year</label>
+            <select name="selectYear" id="selectYearMy" class="form-control selectMy">
+                
+                @foreach(var item in ViewBag.YearList)
+                {
+                    if (item == 0)
+                    {
+                        continue;
+                    }
+                    int currentYear = DateTime.Now.Year;
+                    if (item == currentYear)
+                    {
+                    <option value="@item" selected>@item</option>
+                    }
+                    else
+                    {
+                    <option value="@item">@item</option>
+                    }
+                }
+            </select>
+        </div>
+        <!--./Year Selection-->
+
+        <!--Term Selection-->
+        <div class="col-12 col-sm-auto my-2">
+
+            <label class="sr-only" for="selectTermMy">Term</label>
+            <select name="selectTerm" id="selectTermMy" class="form-control selectMy">
+                <option value="Summer">Summer</option>
+                <option value="01">Term 1</option>
+                <option value="Autumn">Autumn</option>
+                <option value="02">Term 2</option>
+                <option value="Winter">Winter</option>
+                <option value="03">Term 3</option>
+                <option value="Spring">Spring</option>
+                <option value="04">Term 4</option>
+            </select>
+        </div>
+        <!--./Term Selection-->
+
+        <!--Grade Selection-->
+        <div class="col-12 col-sm-auto my-2">
+
+            <label class="sr-only" for="selectGradeMy selectGrade">Grade</label>
+            <select name="selectGrade" id="selectGradeMy" class="form-control selectMy">
+                <option value="a">Grade</option>
+                <option value="0">Year K</option>
+                <option value="1">Year 1</option>
+                <option value="2">Year 2</option>
+                <option value="3">Year 3</option>
+                <option value="4">Year 4</option>
+                <option value="5">Year 5</option>
+                <option value="6">Year 6</option>
+                <option value="7">Year 7</option>
+                <option value="8">Year 8</option>
+                <option value="9">Year 9</option>
+                <option value="10">Year 10</option>
+                <option value="11">Year 11</option>
+                <option value="12">Year 12</option>
+            </select>
+        </div>
+        <!--./Grade Selection-->
+    </div>
+    <!--./Manage Bar-->
+
+    <!--My Class Content-->
+    <div class="partialDiv" id="myClassPartial"></div>
+    <!--./My Class Content-->
+
+</div>
+<!--./Classes for teacher-->
+
+<!--Other Class-->
+@if(ViewBag.IsAccessible)
+{
+<div id="otherClassWrapper" class="container pt=5 mt-5">
+
+    <h2> Other Classes</h2>
+
+    <!--Manage Bar-->
+    <div class="form-row align-items-center my-4">
+
+        <!--Select Year-->
+        <div class="col-12 col-sm-auto my-2">
+            <label class="sr-only" for="selectYearOther">Year</label>
+            <select name="selectYear" id="selectYearOther" class="form-control selectOther">
+
+                @foreach(var item in ViewBag.YearList)
+                {
+                    if (item == 0)
+                    {
+                        continue;
+                    }
+                    int currentYear = DateTime.Now.Year;
+                    if (item == currentYear)
+                    {
+                    <option value="@item" selected>@item</option>
+                    }
+                    else
+                    {
+                    <option value="@item">@item</option>
+                    }
+                }
+            </select>
+        </div>
+        <!--./Select Year-->
+
+        <!--Select Term-->
+        <div class="col-12 col-sm-auto my-2">
+            <label class="sr-only" for="selectTermOther">Term</label>
+            <select name="selectTerm" id="selectTermOther" class="form-control selectOther">
+                <option value="Summer">Summer</option>
+                <option value="01">Term 1</option>
+                <option value="Autumn">Autumn</option>
+                <option value="02">Term 2</option>
+                <option value="Winter">Winter</option>
+                <option value="03">Term 3</option>
+                <option value="Spring">Spring</option>
+                <option value="04">Term 4</option>
+            </select>
+        </div>
+        <!--./Select Term-->
+
+        <!--Select Grade-->
+        <div class="col-12 col-sm-auto my-2">
+            <label class="sr-only" for="selectGradeOther">Grade</label>
+            <select name="selectGrade" id="selectGradeOther" class="form-control selectOther">
+                <option value="a">Grade</option>
+                <option value="0">Year K</option>
+                <option value="1">Year 1</option>
+                <option value="2">Year 2</option>
+                <option value="3">Year 3</option>
+                <option value="4">Year 4</option>
+                <option value="5">Year 5</option>
+                <option value="6">Year 6</option>
+                <option value="7">Year 7</option>
+                <option value="8">Year 8</option>
+                <option value="9">Year 9</option>
+                <option value="10">Year 10</option>
+                <option value="11">Year 11</option>
+                <option value="12">Year 12</option>
+            </select>
+        </div>
+        <!--Select Grade-->
+
+        <!--Search Content-->
+        <div class="col-12 col-sm-auto my-2">
+            <input type="text" id="otherClassFilterInput" class="form-control selectOther" placeholder="SEARCH" value="">
+        </div>
+        <!--./Search Content-->
+
+        <!--Search Button-->
+        <div class="col-12 col-sm-auto my-2">
+            <button class="btn btn-warning btn-block">Search</button>
+        </div>
+        <!--./Search Button-->
+
+    </div>
+    <!--./Manage Bar-->
+
+    <!--Other Class Content-->
+    <div class="partialDiv" id="otherClassPartial"></div>
+    <!--./Other Class Content-->
+
+</div>
+}
+<!--./Other Class-->
+
+<!--JS-->
+<script>
+
+    // TODO: This code is duplicated. Change it later on
+    // set year SelectBox from ajax
+    function SetYearSelectBox()
+    {
+        $.ajax({
+            url: '@Url.Content("~/Class/GetYearSelectData")',
+            type: 'POST',
+            success: function (data) {
+
+                $('#selectYearMy').empty();
+                $('#selectYearOther').empty();
+
+                $.each(data, function (index, item) {
+
+                    if (item != 0) {
+
+                        // Fill out the select boxes
+                        $('#selectYearMy').append($("<option></option>").attr("value", item).text(item));
+                        $('#selectYearOther').append($("<option></option>").attr("value", item).text(item));
+                    }
+                });
+
+                initiateClassView();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                var responseTitle = $(jqXHR.responseText).filter('title').get(0);
+                alert($(responseTitle).text() + "\n" + formatErrorMessage(jqXHR, errorThrown));
+
+                if (errorThrown == 'Unauthorized')
+                    window.location = '@Url.Content("~/Account/Login")';
+            }
+        });
+    }
+
+    function initiateClassView() {
+
+        //$('#selectYearMy').val('@ViewBag.selectedYear'); // .selectmenu('refresh', true) //document.getElementById("selectYearMy").value = "2019";
+        $('#selectTermMy').val('@ViewBag.selectedTerm'); // .selectmenu('refresh', true);
+        $('#selectGradeMy').val('a');
+        callMyClassList();
+
+        if ($('#otherClassWrapper').val() != null) {
+
+            //$('#selectYearOther').val('@ViewBag.selectedYear'); //.selectmenu('refresh', true);
+            $('#selectTermOther').val('@ViewBag.selectedTerm'); //.selectmenu('refresh', true);
+            $('#selectGradeOther').val('a');
+            callOtherClassList();
+        }
+    }
+
+    // Register change event in SelectBox
+    $('.selectMy').on('change', function (e) {
+        callMyClassList();
+    });
+
+    // Register change event in SelectBox
+    $('.selectOther').on('change', function (e) {
+        callOtherClassList();
+    });
+
+    // Declare global variable
+    var searchString = "";
+    // Register change event in Text-Box
+    $('.selectOther').on('change', function (e) {
+
+        console.log(".");
+        callOtherClassList();
+    });
+
+    function callMyClassList() {
+
+        var selectedYear = $('#selectYearMy').val();
+        var selectedTerm = $('#selectTermMy').val();
+        var selectedGrade = $('#selectGradeMy').val();
+
+        //console.log(selectedYear);
+        //console.log(selectedTerm);
+        //console.log(selectedGrade);
+
+        $.ajax({
+            url: '@Url.Content("~/Class/MyCLassList")',
+            type: 'POST',
+            data: { year: selectedYear, term: selectedTerm, grade: selectedGrade },
+            success: function (data) {
+
+                //Html-trigger(create)
+                $('#myClassPartial').html(data).trigger("create");
+
+            },
+        });
+    }
+
+    function callOtherClassList() {
+
+        var selectedYear = $('#selectYearOther').val();
+        var selectedTerm = $('#selectTermOther').val();
+        var selectedGrade = $('#selectGradeOther').val();
+
+        var searchString = $('#otherClassFilterInput').val();
+
+        //console.log(selectedYear);
+        //console.log(selectedTerm);
+        //console.log(selectedGrade);
+        //console.log(searchString);
+
+        $.ajax({
+
+            url: '@Url.Content("~/Class/OtherCLassList")',
+            type: 'POST',
+            data: { year: selectedYear, term: selectedTerm, grade: selectedGrade, searchString: searchString},
+            success: function (data) {
+                $('#otherClassPartial').html(data).trigger("create");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+    }
+
+    // * Make multiple calls
+    //SetYearSelectBox();
+    initiateClassView();
+
+    //callMyClassList();
+    //callOtherClassList();
+
+</script>
+<!--./JS-->

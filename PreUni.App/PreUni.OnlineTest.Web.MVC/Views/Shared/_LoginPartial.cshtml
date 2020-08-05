@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNet.Identity
+@using PreUni.OnlineTest.Web.MVC.Helper
+
+<div class="d-flex flex-row pr-sm-0 pr-lg-5">
+
+    @if (Request.IsAuthenticated)
+    {
+        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "p-2" })) //
+        {
+
+            @Html.AntiForgeryToken()
+
+            <div class="dropdown text-white">
+
+                <div href="/Manage/Index" title="Manage" class="dropdown-toggle" href="#" id="navbarDropdown"
+                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @{
+                        //var user = User.Identity.GetUserName();
+                        //var modifiedUserName = StringManager.GetUserNameDeleteAlpha(user);
+
+                        var userFullName = User.GetFullName();
+                    }
+                    <span>@userFullName</span>
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    
+                    @Html.ActionLink("Manage Account", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage",@class= "dropdown-item" })
+                    <a class="dropdown-item btn btn-danger" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+
+                </div>
+            </div>
+
+
+        }
+    }
+    else
+    {
+        @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "px-2" })
+        @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "px-2" })
+    }
+
+</div>

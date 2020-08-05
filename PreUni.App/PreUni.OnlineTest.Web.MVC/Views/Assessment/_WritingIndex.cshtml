@@ -1,0 +1,81 @@
+﻿@model IEnumerable<PreUni.Core.Model.OnlineWritingModel>
+
+<div class="container-fluid">
+    <div class="d-flex flex-row-reverse">
+        <div class="d-flex flex-column text-right">
+            @if (ViewBag.IsAccessAvailableForWritingNum == true)
+            {
+            <div class="py-1"># of Test done: <h5 class="d-inline font-weight-bolder" style="color:darkred;">@ViewBag.NumOfTestDone</h5>/@ViewBag.TotalNumOfTestDone</div>
+            }
+            <div class="py-1"># of Marking done: <h5 class="d-inline font-weight-bolder" style="color:darkred;">@ViewBag.NumOfMarkingDone</h5>/@ViewBag.TotalNumOfTestDone</div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Branch</th>
+            <th>Class</th>
+            <th>Student ID</th>
+            <th>Student Name</th>
+            <th>Test Name</th>
+            <th>Score</th>
+            <th>Marker</th>
+            <th>Test</th>
+            <th>Marking</th>
+            <th> </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td class="custom-text-wrap">@item.BranchName</td>
+                <td class="custom-text-wrap">@item.ClassDay @item.ClassNo</td>
+                <td class="custom-text-wrap">@item.StudentID</td>
+                <td class="custom-text-wrap">@item.StudentName</td>
+                <td class="custom-text-wrap">@item.TestName</td>
+                <td class="custom-text-wrap">@(item.Score ?? 0)</td>
+                <td class="custom-text-wrap">@(item.Marker)</td>
+                <td class="custom-text-wrap">
+                    @if(item.IsFinish == 1)
+                    {
+                        <span>Done</span>
+                    }
+                    else
+                    {
+                        <span>Not yet</span>
+                    }
+                </td>
+                <td class="custom-text-wrap">
+                    @if(item.Mark != null)
+                    {
+                        <span>Done</span>
+                    }
+                    else
+                    {
+                        <span>Not yet</span>
+                    }
+                </td>
+                <td class="custom-text-wrap">
+                    @if(item.IsFinish == 1)
+                    {
+                        if(item.Mark != null)
+                        {
+                            @Html.ActionLink("Edit", "MarkNow", new { WritingMarkingID = item.ID, StudentID = item.StudentID, TestID = item.TestID }, new { @class = "btn btn-success btn-block btn-sm" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Mark Now", "MarkNow", new { WritingMarkingID = item.ID, StudentID = item.StudentID, TestID = item.TestID, }, new { @class = "btn btn-primary btn-block btn-sm" })
+                        }
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Not Available", "MarkNow", new { TestID=item.TestID,StudentID=item.StudentID }, new { onclick = "javascript:return false;",@class="linkdisabled btn btn-warning btn-block btn-sm"})
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

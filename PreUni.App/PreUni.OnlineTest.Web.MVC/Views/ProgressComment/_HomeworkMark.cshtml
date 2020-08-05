@@ -1,0 +1,64 @@
+﻿@model  List<PreUni.College.DAL.Model.HomeworkScore>
+
+<div style="float: left; margin-right: 50px; font-family:'Segoe UI'">
+    <table data-role="table" class="ui-responsive">
+
+        <tr>
+            <th colspan="@(Model.Count()+1)" style="text-align:center;">Homework Marks<br />(Previous Term)</th>
+        </tr>
+        <tr>
+            <th colspan="@(Model.Count()+1)">&nbsp;</th>
+        </tr>
+        <tr>
+            <th></th>
+            @foreach (var score in Model)
+            {
+                <th style="text-align:right;">@("W"+score.Week.ToString())</th>
+            }
+        </tr>
+        <tr>
+            <th>Eng</th>
+            @foreach (var score in Model)
+            {
+                <td align="right">@score.Eng</td>
+            }
+        </tr>
+        <tr>
+            <th>Maths</th>
+            @foreach (var score in Model)
+            {
+                <td align="right">@score.Maths</td>
+            }
+        </tr>
+        <!--tr>
+            <th>GA</th>
+            @foreach (var score in Model)
+            {
+                <td>@score.GA</td>
+            }
+        </tr-->
+        <tr>
+            <th>Nov</th>
+            @foreach (var score in Model)
+            {
+                <td align="right">@score.Novel</td>
+            }
+        </tr>
+        <tr>
+            <th>Writing</th>
+            @foreach (var score in Model)
+            {
+                <td align="right">@score.Writing</td>
+            }
+        </tr>
+        <tr>
+            <th>AVG</th>
+            @foreach (var score in Model)
+            {
+                <td align="right">@score.Avg</td>
+            }
+        </tr>
+
+
+    </table>
+</div>

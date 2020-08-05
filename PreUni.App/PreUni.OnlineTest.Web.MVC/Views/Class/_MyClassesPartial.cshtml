@@ -1,0 +1,40 @@
+﻿@model IEnumerable<PreUni.Core.Model.ClassViewModel>
+@using PreUni.Core.Model
+
+<div class="container px-0">
+    @if(Model == null || Model.Count() == 0)
+    {
+        <p>Nothing Found</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <tbody>
+                @foreach (ClassViewModel Class in Model)
+                {
+                    @*<p> ClassNo: @item.ClassNo , Subject: @item.Subject, Term: @item.Term, Day: @item.Day </p>*@
+                    <tr>
+                        <td> @Class.Grade @Class.Subject @Class.Day @Class.ClassNo </td>
+                        <td class="text-right">
+                            @if (Class.CourseSubjectId == 1)
+                            {
+                            <span class="mx-2">
+                                <a href='@Url.Action("Index", "ProgressComment", new { @ClassID = Class.ClassID })'>
+                                    Progress Comment
+                                </a>
+                            </span>
+                            }
+                            @*
+                            <span class="mx-2">
+                                <a href='@Url.Action("Index", "Attendance", new { @ClassID = Class.ClassID })'>
+                                    Attendance
+                                </a>
+                            </span>
+                            *@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
